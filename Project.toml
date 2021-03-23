@@ -1,7 +1,21 @@
 name = "FoodCachingFitting"
-uuid = "2f0fd131-061f-4f99-a751-74c151dd84de"
-authors = ["Johanni Brea"]
+uuid = "a7b569ab-bf07-46ef-a7a0-1661680794a0"
+authors = ["Johanni Brea <jbrea@users.noreply.github.com>"]
 version = "0.1.0"
+
+[deps]
+BSON = "fbb218c0-5317-5bc6-957e-2ee96dd4b1f0"
+CMAEvolutionStrategy = "8d3b24bd-414e-49e0-94fb-163cc3a3e411"
+CodecZstd = "6b39b394-51ab-5f42-8807-6242bab2b4c2"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+Distances = "b4f34e82-e78d-54a5-968a-f98e89d6e8f7"
+Distributed = "8ba89e20-285c-5b6f-9357-94700520ee1b"
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+FoodCachingExperiments = "c83de4e0-732e-420a-99d5-72756bd45ef8"
+FoodCachingModels = "1c4db5f1-e6ab-45d4-a5c5-b1bf60220e94"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+Serialization = "9e88b42a-f829-5b0c-bbe9-9e923198166b"
+SpecialFunctions = "276daf66-3868-5448-9aa4-cd146d93841b"
 
 [compat]
 julia = "1.5"
