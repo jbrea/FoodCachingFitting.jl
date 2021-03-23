@@ -1,6 +1,6 @@
 module FoodCachingFitting
 
-using Distributed, CMAEvolutionStrategy, SpecialFunctions, Serialization
+using Distributed, CMAEvolutionStrategy, SpecialFunctions, Serialization, LibGit2
 @everywhere using FoodCachingExperiments, FoodCachingModels, Distances,
                   Random, DataFrames
 import FoodCachingModels: Population, setparameters!
@@ -154,7 +154,8 @@ const DATADIR = joinpath(@__DIR__, "..", "data")
 const ALLEXPERIMENTS = setdiff(keys(EXPERIMENTS), CLAYTON0103_EXPERIMENTS)
 
 function __init__()
-    read(`git diff HEAD --stat`, String) |> chomp == "" || @warn "git repo is dirty."
-    global __REV__ = read(`git rev-parse --short HEAD`, String) |> chomp
+    dir = joinpath(@__DIR__, "..")
+    LibGit2.isdirty(GitRepo(dir)) && @warn "git repo is dirty."
+    global __REV__ = LibGit2.head(dir)[1:7]
 end
 end
