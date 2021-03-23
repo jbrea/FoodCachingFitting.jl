@@ -1,6 +1,6 @@
 module FoodCachingFitting
 
-using Distributed, CMAEvolutionStrategy, SpecialFunctions, Serialization, LibGit2
+using Distributed, CMAEvolutionStrategy, SpecialFunctions, Serialization, LibGit2, Unitful
 @everywhere using FoodCachingExperiments, FoodCachingModels, Distances,
                   Random, DataFrames
 import FoodCachingModels: Population, setparameters!

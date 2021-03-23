@@ -1,4 +1,4 @@
-using Distributed, Pkg, Unitful, FoodCachingModels
+using Distributed, Pkg
 Pkg.activate(joinpath(@__DIR__, ".."))
 if haskey(ENV, "FOOD_CACHING_PARALLEL")
     nprocs() < Sys.CPU_THREADS && addprocs(Sys.CPU_THREADS - nprocs(),
