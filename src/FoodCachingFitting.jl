@@ -41,9 +41,6 @@ function _logp_hat(x, samples, k; metric = Distances.Euclidean())
     log(k/M) - logvol(metric, n, x) - log(d[k]) * n
 end
 
-init(p::Population{<:AbstractVector}) = [fill(0., length(p.m));
-                                         fill(-4., p.s === nothing ? 0 : length(p.s))]
-
 function noisehandler(n, N; minN = 20, maxN = 500, alphaN = 1.05)
     cb = minN == maxN ?
          s -> s > 0 :
@@ -97,7 +94,7 @@ function optimizer(; model,
                    kwargs...)
     name = simname(model, experiments, id)
     population = model(; experiments, kwargs...)
-    x0 = x0 === nothing ? init(population) : x0
+    x0 = x0 === nothing ? [population.m; population.s] : x0
     flog = open(joinpath(DATADIR, "log", "$name.log"), "a+")
     redirect_stdout(flog)
     println(join(ARGS, " "))
