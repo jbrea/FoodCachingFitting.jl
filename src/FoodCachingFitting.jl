@@ -34,10 +34,13 @@ function logvol(m::Distances.WeightedEuclidean, n, x)
     logvol(Distances.Euclidean(), n, x) - sum(log.(sqrt.(m.weights)))
 end
 function _logp_hat(x, samples, k; metric = Distances.Euclidean())
-    n = length(x)
-    M = length(samples)
     d = metric.(Ref(x), samples)
     sort!(d)
+    _logp_hat(d, x, k, metric)
+end
+function _logp_hat(d, x, k, metric)
+    n = length(x)
+    M = length(d)
     log(k/M) - logvol(metric, n, x) - log(d[k]) * n
 end
 
@@ -78,9 +81,9 @@ function checkpoint_saver(population, simname, f, flog;
     end
 end
 
-function simname(model, experiments, id)
+function simname(model, experiments, id, rev = __REV__)
     e = experiments == ALLEXPERIMENTS ? "all" : join(string.(experiments), "_")
-    "$(model)_$(e)_$(id)_$__REV__"
+    "$(model)_$(e)_$(id)_$rev"
 end
 
 function optimizer(; model,
@@ -128,9 +131,10 @@ function run_experiments(simname, experiments, N; seed = time_ns())
     population = load(joinpath(DATADIR, simname))
     simulate(population, experiments, N = N, rng = MersenneTwister(seed))
 end
-function run_experiments(; models, experiments, id, N, seed = time_ns())
+function run_experiments(; models, experiments,
+                           id, N, seed = time_ns(), rev = __REV__)
     vcat([begin
-              res = run_experiments(simname(model, exs, id), exs, N; seed)
+              res = run_experiments(simname(model, exs, id, rev), exs, N; seed)
               res.model = fill(Symbol(model), length(res.results))
               res
           end
