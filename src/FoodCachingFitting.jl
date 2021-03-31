@@ -66,17 +66,18 @@ function noisehandler(n, N; minN = 20, maxN = 500, alphaN = 1.05)
 end
 
 function checkpoint_saver(population, simname, f, flog;
-                          saveevery = 3600, sigma_threshold = 200,
+                          saveevery = 3600, sigma_threshold = 500,
                           data_dir = DATADIR, t = time())
     (o, _...) -> begin
-        if time() - t > saveevery || o.p.sigma > sigma_threshold
+        sigma = CMAEvolutionStrategy.sigma(o.p)
+        if time() - t > saveevery || sigma > sigma_threshold
             setparameters!(population, population_mean(o))
             dict = Dict{Symbol, Any}(:rev => __REV__)
             save(joinpath(DATADIR, simname), population, dict)
             serialize(joinpath(DATADIR, "o_$simname.dat"),
                       Dict(:optimizer => o, :func => f, :rev => __REV__))
             flush(flog[])
-            if o.p.sigma > sigma_threshold
+            if sigma > sigma_threshold
                 error("Sigma is larger than $sigma_threshold.")
             end
             t = time()
@@ -94,7 +95,7 @@ function optimizer(; model,
                    id = "0",
                    experiments = ALLEXPERIMENTS,
                    saveevery = 3600,
-                   sigma_threshold = 200,
+                   sigma_threshold = 500,
                    sigma0 = .1,
                    x0 = nothing,
                    seed = time_ns(),
