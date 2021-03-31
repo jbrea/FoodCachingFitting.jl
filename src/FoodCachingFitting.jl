@@ -66,16 +66,19 @@ function noisehandler(n, N; minN = 20, maxN = 500, alphaN = 1.05)
 end
 
 function checkpoint_saver(population, simname, f, flog;
-                          saveevery = 3600,
+                          saveevery = 3600, sigma_threshold = 200,
                           data_dir = DATADIR, t = time())
     (o, _...) -> begin
-        if time() - t > saveevery
+        if time() - t > saveevery || o.p.sigma > sigma_threshold
             setparameters!(population, population_mean(o))
             dict = Dict{Symbol, Any}(:rev => __REV__)
             save(joinpath(DATADIR, simname), population, dict)
             serialize(joinpath(DATADIR, "o_$simname.dat"),
                       Dict(:optimizer => o, :func => f, :rev => __REV__))
             flush(flog[])
+            if o.p.sigma > sigma_threshold
+                error("Sigma is larger than $sigma_threshold.")
+            end
             t = time()
         end
     end
@@ -91,6 +94,7 @@ function optimizer(; model,
                    id = "0",
                    experiments = ALLEXPERIMENTS,
                    saveevery = 3600,
+                   sigma_threshold = 200,
                    sigma0 = .1,
                    x0 = nothing,
                    seed = time_ns(),
@@ -106,7 +110,8 @@ function optimizer(; model,
     rng = MersenneTwister(seed)
     f = x -> -logp_hat(setparameters!(population, x), experiments;
                        N = N[], rng = rng)
-    callback = checkpoint_saver(population, name, f, Ref(flog); saveevery)
+    callback = checkpoint_saver(population, name, f, Ref(flog);
+                                saveevery, sigma_threshold)
     noise_handling = noisehandler(length(x0), N)
     (o = Optimizer(x0, sigma0; noise_handling, callback, seed), f = f)
 end
