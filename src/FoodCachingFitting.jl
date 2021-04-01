@@ -66,7 +66,7 @@ function noisehandler(n, N; minN = 20, maxN = 500, alphaN = 1.05)
 end
 
 function checkpoint_saver(population, simname, f, flog;
-                          saveevery = 3600, sigma_threshold = 500,
+                          saveevery = 3600, sigma_threshold = 10^3,
                           data_dir = DATADIR, t = time())
     (o, _...) -> begin
         sigma = CMAEvolutionStrategy.sigma(o.p)
@@ -95,7 +95,7 @@ function optimizer(; model,
                    id = "0",
                    experiments = ALLEXPERIMENTS,
                    saveevery = 3600,
-                   sigma_threshold = 500,
+                   sigma_threshold = 10^3,
                    sigma0 = .1,
                    x0 = nothing,
                    seed = time_ns(),
