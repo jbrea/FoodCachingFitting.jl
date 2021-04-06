@@ -3,7 +3,7 @@ module FoodCachingFitting
 using Distributed, CMAEvolutionStrategy, SpecialFunctions, Serialization, LibGit2, Unitful
 @everywhere using FoodCachingExperiments, FoodCachingModels, Distances,
                   Random, DataFrames
-import FoodCachingModels: Population, setparameters!
+import FoodCachingModels: Population, setparameters!, beta, truncnorm
 import FoodCachingExperiments: EXPERIMENTS, CLAYTON0103_EXPERIMENTS
 import CMAEvolutionStrategy: NoiseHandling, population_mean, Optimizer
 
@@ -90,6 +90,16 @@ function simname(model, experiments, id, rev = __REV__)
     "$(model)_$(e)_$(id)_$rev"
 end
 
+default_lower(m::Population{<:Any, typeof(beta)}) =
+    [fill(-10^3, length(m.m)); fill(.5414, length(m.s))]
+default_lower(m::Population{<:Any, typeof(truncnorm)}) =
+    fill(-20, length(m.m) + length(m.s))
+default_upper(m::Population{<:Any, typeof(beta)}) =
+    fill(10^3, length(m.m) + length(m.s))
+default_upper(m::Population{<:Any, typeof(truncnorm)}) =
+    fill(20, length(m.m) + length(m.s))
+
+
 function optimizer(; model,
                    N0 = 20,
                    id = "0",
@@ -98,11 +108,23 @@ function optimizer(; model,
                    sigma_threshold = 10^3,
                    sigma0 = .1,
                    x0 = nothing,
+                   lower = :default,
+                   upper = :default,
                    seed = time_ns(),
                    kwargs...)
     name = simname(model, experiments, id)
     population = model(; experiments, kwargs...)
     x0 = x0 === nothing ? [population.m; population.s] : x0
+    if lower == :default
+        lower = default_lower(population)
+    elseif lower == -Inf
+        lower = fill(-Inf, length(x0))
+    end
+    if upper == :default
+        upper = default_upper(population)
+    elseif upper == Inf
+        upper = fill(Inf, length(x0))
+    end
     flog = open(joinpath(DATADIR, "log", "$name.log"), "a+")
     redirect_stdout(flog)
     println(join(ARGS, " "))
@@ -114,7 +136,7 @@ function optimizer(; model,
     callback = checkpoint_saver(population, name, f, Ref(flog);
                                 saveevery, sigma_threshold)
     noise_handling = noisehandler(length(x0), N)
-    (o = Optimizer(x0, sigma0; noise_handling, callback, seed), f = f)
+    (o = Optimizer(x0, sigma0; noise_handling, callback, seed, lower, upper), f = f)
 end
 
 function fit(; kwargs...)
