@@ -114,7 +114,7 @@ function optimizer(; model,
                    kwargs...)
     name = simname(model, experiments, id)
     population = model(; experiments, kwargs...)
-    x0 = x0 === nothing ? [population.m; population.s === nothing ? [] : population.s] : x0
+    x0 = x0 === nothing ? [population.m; population.s === nothing ? Float64[] : population.s] : x0
     if lower == :default
         lower = default_lower(population)
     elseif lower == -Inf
