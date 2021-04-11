@@ -118,12 +118,12 @@ function optimizer(; model,
     if lower == :default
         lower = default_lower(population)
     elseif lower == -Inf
-        lower = fill(-Inf, length(x0))
+        lower = nothing
     end
     if upper == :default
         upper = default_upper(population)
     elseif upper == Inf
-        upper = fill(Inf, length(x0))
+        upper = nothing
     end
     flog = open(joinpath(DATADIR, "log", "$name.log"), "a+")
     redirect_stdout(flog)
