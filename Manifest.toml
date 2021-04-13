@@ -7,9 +7,9 @@ uuid = "0dad84c5-d112-42e6-8d28-ef12dabb789f"
 uuid = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
 
 [[BSON]]
-git-tree-sha1 = "db18b5ea04686f73d269e10bdb241947c40d7d6f"
+git-tree-sha1 = "92b8a8479128367aaab2620b8e73dff632f5ae69"
 uuid = "fbb218c0-5317-5bc6-957e-2ee96dd4b1f0"
-version = "0.3.2"
+version = "0.3.3"
 
 [[Base64]]
 uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
@@ -139,7 +139,7 @@ version = "0.11.7"
 
 [[FoodCachingExperiments]]
 deps = ["BSON", "CSV", "CodecZstd", "DataFrames", "DataFramesMeta", "Distributions", "HypothesisTests", "LinearAlgebra", "Random", "StatsBase", "StatsModels", "TOML", "Unitful"]
-git-tree-sha1 = "b57688623c8e71eedd923d066481cc6d7faf77bd"
+git-tree-sha1 = "09429bdc03daf27ad1b04629b8192fef9fd4375a"
 repo-rev = "master"
 repo-url = "../FoodCachingExperiments"
 uuid = "c83de4e0-732e-420a-99d5-72756bd45ef8"
@@ -147,7 +147,7 @@ version = "0.1.0"
 
 [[FoodCachingModels]]
 deps = ["DataFrames", "Distributed", "Distributions", "FoodCachingExperiments", "NestedStructInitialiser", "RuntimeGeneratedFunctions", "Unitful"]
-git-tree-sha1 = "6349b443ab38d7cf1e976b29e8eca12eca929e39"
+git-tree-sha1 = "3e9b2aef7887ff11188abf8f4333fadeb489617d"
 repo-rev = "master"
 repo-url = "../FoodCachingModels"
 uuid = "1c4db5f1-e6ab-45d4-a5c5-b1bf60220e94"
@@ -409,9 +409,9 @@ version = "0.6.21"
 
 [[StructTypes]]
 deps = ["Dates", "UUIDs"]
-git-tree-sha1 = "5eaf731e88587bb72a6c1262c0a014cd1859a08d"
+git-tree-sha1 = "63fbaf8345b590161cd0c35b927f88d3f7b2cf75"
 uuid = "856f2bd8-1eba-4b0a-8007-ebc267875bd4"
-version = "1.5.2"
+version = "1.6.0"
 
 [[SuiteSparse]]
 deps = ["Libdl", "LinearAlgebra", "Serialization", "SparseArrays"]
@@ -429,9 +429,9 @@ version = "1.0.1"
 
 [[Tables]]
 deps = ["DataAPI", "DataValueInterfaces", "IteratorInterfaceExtensions", "LinearAlgebra", "TableTraits", "Test"]
-git-tree-sha1 = "a9ff3dfec713c6677af435d6a6d65f9744feef67"
+git-tree-sha1 = "c9d2d262e9a327be1f35844df25fe4561d258dc9"
 uuid = "bd369af6-aec1-5ad0-b16a-f7cc5008161c"
-version = "1.4.1"
+version = "1.4.2"
 
 [[Tar]]
 deps = ["ArgTools", "SHA"]
