@@ -147,15 +147,15 @@ version = "0.11.7"
 deps = ["BSON", "CSV", "CodecZstd", "DataFrames", "DataFramesMeta", "Distributions", "HypothesisTests", "LinearAlgebra", "Random", "StatsBase", "StatsModels", "TOML", "Unitful"]
 git-tree-sha1 = "6d99cccd0d76653409ae79fe32e0fa59650f2fd5"
 repo-rev = "master"
-repo-url = "../FoodCachingExperiments"
+repo-url = "https://github.com/jbrea/FoodCachingExperiments.jl"
 uuid = "c83de4e0-732e-420a-99d5-72756bd45ef8"
 version = "0.1.0"
 
 [[FoodCachingModels]]
 deps = ["DataFrames", "Distributed", "Distributions", "FoodCachingExperiments", "NestedStructInitialiser", "RuntimeGeneratedFunctions", "Unitful"]
-git-tree-sha1 = "9ebfa2b21405b875a5ff353dfbde0bf29c57d620"
+git-tree-sha1 = "7d56a25b1126f504dc631054e8bd5da327a71085"
 repo-rev = "master"
-repo-url = "../FoodCachingModels"
+repo-url = "https://github.com/jbrea/FoodCachingModels.jl"
 uuid = "1c4db5f1-e6ab-45d4-a5c5-b1bf60220e94"
 version = "0.1.0"
 
