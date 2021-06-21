@@ -69,7 +69,7 @@ for exp in {deKort07_exp3,Cheke11_specsat,deKort05,Clayton99B_exp2,Clayton05_exp
 do
     for id in "${@:2}";
     do
-        CMDS+="julia fit.jl snapshotmodel=FoodCachingModels.SnapshotSimple specsat=FoodCachingModels.SpecSatOrthoParams compensatorycachingmodel=FoodCachingModels.HungerIncrease digestionduration=5.0u\"\\\"minute\\\"\" maxcacheweight=1. distribution=FoodCachingModels.beta sigma0=5. id=\":$id\" model=$1 experiments=\"[:$exp]\";"
+        CMDS+="julia fit.jl snapshotmodel=FoodCachingModels.SnapshotSimple specsat=FoodCachingModels.SpecSatOrthoParams compensatorycachingmodel=FoodCachingModels.HungerIncrease digestionduration=5.0u\"\\\"minute\\\"\" maxcacheweight=1.  distribution=FoodCachingModels.beta sigma0=1. lower=-Inf upper=Inf hungerincreasethreshold=.99 dontcare=-Inf id=\":$id\" model=$1 experiments=\"[:$exp]\";"
     done
 done
 
