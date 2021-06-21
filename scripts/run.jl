@@ -22,7 +22,7 @@ function run(; rev = __REV__, ids = 1:4, savename = join(string.(Char.(rand(97:1
     for model in models
         for e in etest
             for id in ids
-                name = simname(model, etrain, id, rev)
+                name = simname(model, etrain == :indi ? [e] : etrain, id, rev)
                 isfile(joinpath(DATADIR, "$name.bson.zstd")) || continue
                 println("Running $e with $name.")
                 tmp = run_experiments(name, [e], rep*N)
