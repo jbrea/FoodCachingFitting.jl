@@ -7,38 +7,33 @@ if haskey(ENV, "FOOD_CACHING_PARALLEL")
 end
 using FoodCachingModels, DataFrames, Distances, Statistics
 import FoodCachingExperiments: bsave, target
-import FoodCachingFitting: run_experiments, ALLEXPERIMENTS, DATADIR, _logp_hat,
-simname, parse_args, __REV__
+import FoodCachingFitting: run_experiments, ALLEXPERIMENTS, DATADIR, _logp_hat, simname
 
-function run(; rev = __REV__, ids = 1:4, savename = join(string.(Char.(rand(97:122, 10))), ""),
-               models = [Baseline, MotivationalControl, EpisodicLikeMemory,
-                         PlasticCaching, ReplayAndPlan],
-               N = 10^4, k = 5, rep = 10,
-               etest = ALLEXPERIMENTS, etrain = etest,)
-    results = DataFrame(model = [], experiment = [], logp_hat = [],
-                        logp_hat_std = [], id = [],
-                        avg = [], best = [], best_seed = [],
-                        N = [], rep = [], k = [])
-    for model in models
-        for e in etest
-            for id in ids
-                name = simname(model, etrain == :indi ? [e] : etrain, id, rev)
-                isfile(joinpath(DATADIR, "$name.bson.zstd")) || continue
-                println("Running $e with $name.")
-                tmp = run_experiments(name, [e], rep*N)
-                metric = Distances.Euclidean()
-                x = target(e)
-                d = metric.(Ref(x), tmp.results)
-                s = sortperm(d)
-                ls = [_logp_hat(sort(d[N*i + 1:N*(i+1)]), x, k, metric)
-                      for i in 0:rep-1]
-                push!(results, [Symbol(model), e, mean(ls), std(ls), id,
-                                mean(tmp.results),
-                                tmp.results[s[1]], tmp.seed[s[1]], N, rep, k])
-            end
+function bootstrap(f, x; N = 100)
+    result = [f(x[rand(1:length(x), length(x))]) for _ in 1:N]
+    std(result)
+end
+results = DataFrame(model = [], experiment = [], logp_hat = [],
+                    logp_hat_std = [], id = [],
+                    avg = [], best = [], best_seed = [])
+rev = "b15ffc2"
+for model in [Baseline, MotivationalControl, EpisodicLikeMemory,
+              PlasticCaching, ReplayAndPlan]
+    for e in ALLEXPERIMENTS
+        for id in 1:4
+            println("Running $model, $e, $id.")
+            tmp = run_experiments(simname(model, [e], id, rev), [e], 20000)
+            metric = Distances.Euclidean()
+            x = target(e)
+            d = metric.(Ref(x), tmp.results)
+            s = sortperm(d)
+            d = d[s]
+            f = d -> _logp_hat(d, x, 5, metric)
+            l = f(d)
+            st = bootstrap(f, d)
+            push!(results, [Symbol(model), e, l, st, id, mean(tmp.results),
+                            tmp.results[s[1]], tmp.seed[s[1]]])
         end
     end
-    bsave(joinpath(DATADIR, "run_$savename"), Dict(:results => results))
 end
-
-run(; parse_args()...)
+bsave(joinpath(DATADIR, "run_indi_$rev"), Dict(:results => results))
