@@ -67,10 +67,7 @@ function ParallelExec {
 CMDS=""
 for exp in {deKort07_exp3,Cheke11_specsat,deKort05,Clayton99B_exp2,Clayton05_exp3,Clayton99C_exp1,Clayton99B_exp1,Raby07_planningforbreakfast,Correia07_exp1,Clayton05_exp4,Clayton99A_exp2,deKort07_exp2,Clayton05_exp1,Clayton99C_exp3,Raby07_breakfastchoice,Cheke11_planning,deKort07_exp1,Clayton05_exp2,Clayton99C_exp2,Correia07_exp2,Clayton99A_exp1,Clayton0103,deKort07_exp4};
 do
-    for id in "${@:2}";
-    do
-        CMDS+="julia fit.jl snapshotmodel=FoodCachingModels.SnapshotSimple specsat=FoodCachingModels.SpecSatOrthoParams compensatorycachingmodel=FoodCachingModels.HungerIncrease digestionduration=5.0u\"\\\"minute\\\"\" maxcacheweight=1. distribution=FoodCachingModels.beta sigma0=5. id=\":$id\" model=$1 experiments=\"[:$exp]\";"
-    done
+    CMDS+="julia fit.jl model=$1 id=\":$2\" experiments=\"[:$exp]\" ${@:3};"
 done
 
 ParallelExec 46 "$CMDS"
