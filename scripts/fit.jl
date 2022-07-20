@@ -22,7 +22,8 @@ if (!haskey(args, :joint) || args[:joint] == false) && length(args[:experiments]
 else
     if haskey(args, :procs)
         N = args[:procs]
-        addprocs(N, exeflags = "--project", dir = joinpath(@__DIR__, ".."))
+        addprocs(N, exeflags = "--project=$(joinpath(@__DIR__, ".."))")
+        @everywhere using FoodCachingModels, FoodCachingFitting
     end
     fit(; args...)
 end
