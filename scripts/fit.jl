@@ -1,11 +1,28 @@
 using Distributed, Pkg
 Pkg.activate(joinpath(@__DIR__, ".."))
-if haskey(ENV, "FOOD_CACHING_PARALLEL")
-    nprocs() < Sys.CPU_THREADS && addprocs(Sys.CPU_THREADS - nprocs(),
-                                           exeflags = "--project",
-                                           dir = joinpath(@__DIR__, ".."))
-end
 using FoodCachingModels
-import FoodCachingFitting: fit, parse_args
+import FoodCachingFitting: fit, parse_args, ALLEXPERIMENTS
 
-fit(; parse_args()...)
+args = parse_args()
+if (!haskey(args, :joint) || args[:joint] == false) && length(args[:experiments]) > 1
+    if haskey(args, :procs)
+        N = args[:procs] ÷ length(args[:experiments])
+    else
+        N = 0
+    end
+    chprocs = []
+    for e in args[:experiments]
+        cmdargs = [ARGS; "experiments=[:$e]"; "procs=$N"]
+        chp = run(`$(Base.julia_cmd()) fit.jl $cmdargs`,
+                  stdin, stdout, stderr,
+                  wait = false)
+        push!(chprocs, chp)
+    end
+    all(success.(chprocs))
+else
+    if haskey(args, :procs)
+        N = args[:procs]
+        addprocs(N, exeflags = "--project", dir = joinpath(@__DIR__, ".."))
+    end
+    fit(; args...)
+end
