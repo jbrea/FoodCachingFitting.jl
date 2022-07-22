@@ -11,6 +11,7 @@ if haskey(args, :procs)
     nprocs = args[:procs]
     addprocs(nprocs, exeflags = "--project=$(joinpath(@__DIR__, ".."))")
     @everywhere using FoodCachingExperiments, FoodCachingFitting, DataFrames, Distances, Statistics
+    pop!(args, :procs)
 end
 
 function run(; rev = __REV__, ids = 1:4,
