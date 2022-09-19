@@ -68,19 +68,22 @@ end
 function checkpoint_saver(population, simname, f, flog;
                           saveevery = 3600, sigma_threshold = 10^3,
                           data_dir = DATADIR, t = time())
-    (o, _...) -> begin
-        sigma = CMAEvolutionStrategy.sigma(o.p)
-        if time() - t > saveevery || sigma > sigma_threshold
-            setparameters!(population, population_mean(o))
-            dict = Dict{Symbol, Any}(:rev => __REV__)
-            save(joinpath(DATADIR, simname), population, dict)
-            serialize(joinpath(DATADIR, "o_$simname.dat"),
-                      Dict(:optimizer => o, :func => f, :rev => __REV__))
-            flush(flog[])
-            if sigma > sigma_threshold
-                error("Sigma is larger than $sigma_threshold.")
+    let t = t
+        function(o, args...; now = false)
+            @warn "checkpoint"
+            sigma = CMAEvolutionStrategy.sigma(o.p)
+            if now || time() - t > saveevery || sigma > sigma_threshold
+                setparameters!(population, population_mean(o))
+                dict = Dict{Symbol, Any}(:rev => __REV__)
+                save(joinpath(data_dir, simname), population, dict)
+                serialize(joinpath(data_dir, "o_$simname.dat"),
+                          Dict(:optimizer => o, :func => f, :rev => __REV__))
+                flush(flog[])
+                if sigma > sigma_threshold
+                    error("Sigma is larger than $sigma_threshold.")
+                end
+                t = time()
             end
-            t = time()
         end
     end
 end
@@ -91,13 +94,13 @@ function simname(model, experiments, id, rev = __REV__)
 end
 
 default_lower(m::Population{<:Any, typeof(beta)}) =
-    [fill(-10^3, length(m.m)); fill(.5414, length(m.s))]
+    [fill(-1e3, length(m.m)); fill(.5414, length(m.s))]
 default_lower(m::Population{<:Any, typeof(truncnorm)}) =
-    fill(-20, length(m.m) + length(m.s))
+    fill(-20., length(m.m) + length(m.s))
 default_upper(m::Population{<:Any, typeof(beta)}) =
-    fill(10^3, length(m.m) + length(m.s))
+    fill(1e3, length(m.m) + length(m.s))
 default_upper(m::Population{<:Any, typeof(truncnorm)}) =
-    fill(20, length(m.m) + length(m.s))
+    fill(20., length(m.m) + length(m.s))
 
 
 function optimizer(; model,
@@ -142,6 +145,7 @@ end
 function fit(; kwargs...)
     o, f = optimizer(; kwargs...)
     CMAEvolutionStrategy.run!(o, f)
+    o.logger.callback(o, now = true)
 end
 
 function resume_fit(simname)
