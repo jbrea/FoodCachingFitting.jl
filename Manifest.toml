@@ -169,9 +169,9 @@ version = "0.1.0"
 
 [[FoodCachingModels]]
 deps = ["DataFrames", "Distributed", "Distributions", "FoodCachingExperiments", "NestedStructInitialiser", "RuntimeGeneratedFunctions", "Unitful"]
-git-tree-sha1 = "155bd0a8a17b1aab5945c84b4fe132d8223a116d"
+git-tree-sha1 = "ffc209b32e201b78bc34eb9b019529a982301e56"
 repo-rev = "master"
-repo-url = "https://github.com/jbrea/FoodCachingModels.jl"
+repo-url = "../FoodCachingModels"
 uuid = "1c4db5f1-e6ab-45d4-a5c5-b1bf60220e94"
 version = "0.1.0"
 
