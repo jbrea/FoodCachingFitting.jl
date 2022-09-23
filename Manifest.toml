@@ -163,7 +163,7 @@ version = "0.11.9"
 deps = ["BSON", "CSV", "CodecZstd", "DataFrames", "DataFramesMeta", "Distributions", "HypothesisTests", "LinearAlgebra", "Random", "StatsBase", "StatsModels", "TOML", "Unitful"]
 git-tree-sha1 = "0b795288fe2ef0dc779236cd9e46f17b0abd465f"
 repo-rev = "master"
-repo-url = "https://github.com/jbrea/FoodCachingExperiments.jl"
+repo-url = "../FoodCachingExperiments"
 uuid = "c83de4e0-732e-420a-99d5-72756bd45ef8"
 version = "0.1.0"
 
