@@ -3,7 +3,7 @@ module FoodCachingFitting
 using Distributed, CMAEvolutionStrategy, SpecialFunctions, Serialization, Unitful
 using LibGit2
 using FoodCachingExperiments, FoodCachingModels, Distances, Random, DataFrames
-import FoodCachingModels: Population, setparameters!, beta, truncnorm
+import FoodCachingModels: Population, setparameters!, beta, truncnorm, load
 import FoodCachingExperiments: EXPERIMENTS, CLAYTON0103_EXPERIMENTS
 import CMAEvolutionStrategy: NoiseHandling, population_mean, Optimizer
 
@@ -103,7 +103,9 @@ default_upper(m::Population{<:Any, typeof(truncnorm)}) =
     fill(20., length(m.m) + length(m.s))
 
 
-function optimizer(; model,
+function optimizer(;
+                   population_file = nothing,
+                   model = nothing,
                    N0 = 20,
                    id = "0",
                    experiments = ALLEXPERIMENTS,
@@ -115,8 +117,13 @@ function optimizer(; model,
                    upper = :default,
                    seed = time_ns(),
                    kwargs...)
-    name = simname(model, experiments, id)
-    population = model(; experiments, kwargs...)
+    if population_file !== nothing
+        population = load(population_file)
+    elseif model !== nothing
+        population = model(; experiments, kwargs...)
+    else
+        @error "Please provide at either `model` or `population_file`."
+    end
     x0 = x0 === nothing ? [population.m; population.s === nothing ? Float64[] : population.s] : x0
     if lower == :default
         lower = default_lower(population)
@@ -128,6 +135,7 @@ function optimizer(; model,
     elseif upper == Inf
         upper = nothing
     end
+    name = simname(model, experiments, id)
     flog = open(joinpath(DATADIR, "log", "$name.log"), "a+")
     redirect_stdout(flog)
     println(join(ARGS, " "))
