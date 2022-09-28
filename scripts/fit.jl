@@ -13,8 +13,8 @@ if (!haskey(args, :joint) || args[:joint] == false) && length(args[:experiments]
     chprocs = []
     for e in args[:experiments]
         cmdargs = [ARGS; "experiments=[:$e]"; "procs=$N"]
-        if haskey(ARGS, :population_file)
-            population_file = replace(ARGS[:population_file], "EXPERIMENT" => e)
+        if haskey(args, :population_file)
+            population_file = replace(args[:population_file], "EXPERIMENT" => e)
             push!(cmdargs, "population_file=$population_file")
         end
         chp = run(`$(Base.julia_cmd()) fit.jl $cmdargs`,
