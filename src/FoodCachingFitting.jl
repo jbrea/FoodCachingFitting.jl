@@ -118,7 +118,7 @@ function optimizer(;
                    seed = time_ns(),
                    kwargs...)
     if population_file !== nothing
-        population = load(population_file)
+        population = load(joinpath(DATADIR, population_file))
     elseif model !== nothing
         population = model(; experiments, kwargs...)
     else
