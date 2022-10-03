@@ -1,5 +1,6 @@
 using Distributed, Pkg
 Pkg.activate(joinpath(@__DIR__, ".."))
+Pkg.instantiate()
 using FoodCachingModels
 import FoodCachingFitting: fit, parse_args, ALLEXPERIMENTS
 
