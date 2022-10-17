@@ -70,7 +70,7 @@ function checkpoint_saver(population, simname, f, flog;
                           data_dir = DATADIR, t = time())
     let t = t
         function(o, args...; now = false)
-            @warn "checkpoint"
+#             @info "checkpoint"
             sigma = CMAEvolutionStrategy.sigma(o.p)
             if now || time() - t > saveevery || sigma > sigma_threshold
                 setparameters!(population, population_mean(o))
@@ -122,7 +122,7 @@ function optimizer(;
     elseif model !== nothing
         population = model(; experiments, kwargs...)
     else
-        @error "Please provide at either `model` or `population_file`."
+        @error "Please provide either `model` or `population_file`."
     end
     x0 = x0 === nothing ? [population.m; population.s === nothing ? Float64[] : population.s] : x0
     if lower == :default
