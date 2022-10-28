@@ -1,5 +1,6 @@
 # This file is machine-generated - editing it directly is not advised
 
+julia_version = "1.7.3"
 manifest_format = "2.0"
 
 [[deps.ArgTools]]
@@ -23,9 +24,9 @@ version = "0.4.2"
 
 [[deps.CMAEvolutionStrategy]]
 deps = ["Dates", "LinearAlgebra", "Printf", "Random", "Statistics"]
-git-tree-sha1 = "76faad55409f6c625fd7a79ac315fdc7ce4e73b3"
+git-tree-sha1 = "8e58664653c18934dd323a6442b575749028c349"
 uuid = "8d3b24bd-414e-49e0-94fb-163cc3a3e411"
-version = "0.2.3"
+version = "0.2.4"
 
 [[deps.CSV]]
 deps = ["Dates", "Mmap", "Parsers", "PooledArrays", "SentinelArrays", "Tables", "Unicode"]
