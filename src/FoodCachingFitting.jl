@@ -44,7 +44,7 @@ function _logp_hat(d, x, k, metric)
     log(k/M) - logvol(metric, n, x) - log(d[k]) * n
 end
 
-function noisehandler(n, N; minN = 20, maxN = 500, alphaN = 1.05)
+function noisehandler(n, N; minN = 20, maxN = 1000, alphaN = 1.05)
     cb = minN == maxN ?
          s -> s > 0 :
          s -> begin
@@ -107,6 +107,8 @@ function optimizer(;
                    population_file = nothing,
                    model = nothing,
                    N0 = 20,
+                   minN = 20,
+                   maxN = 1000,
                    id = "0",
                    experiments = ALLEXPERIMENTS,
                    saveevery = 3600,
@@ -146,7 +148,7 @@ function optimizer(;
                        N = N[], rng = rng)
     callback = checkpoint_saver(population, name, f, Ref(flog);
                                 saveevery, sigma_threshold)
-    noise_handling = noisehandler(length(x0), N)
+    noise_handling = noisehandler(length(x0), N; minN, maxN)
     (o = Optimizer(x0, sigma0; noise_handling, callback, seed, lower, upper), f = f)
 end
 
